@@ -23,6 +23,10 @@ type Config struct {
 	// The server applies this list at startup; changing it requires a restart.
 	TrustedProxies []string `yaml:"trusted-proxies" json:"trusted-proxies"`
 
+	// UserAgent overrides the User-Agent header sent on outbound requests to
+	// upstream OpenAI-compatible providers. When empty, DefaultUserAgent is used.
+	UserAgent string `yaml:"user-agent" json:"user-agent"`
+
 	// TLS config controls HTTPS server settings.
 	TLS TLSConfig `yaml:"tls" json:"tls"`
 

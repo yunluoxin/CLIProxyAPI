@@ -76,7 +76,6 @@ server:
     # auth-required: true               # Advertise that credentials are required
 
     # advertise-management: false      # Advertise management availability
-
 # Management API settings
 management:
   # Whether to allow remote (non-localhost) management access.
@@ -226,6 +225,11 @@ requests:
   # When true, forward filtered upstream response headers to downstream clients.
   # Default is false (disabled).
   passthrough-headers: false
+
+  # Override the User-Agent header sent on outbound requests to upstream
+  # OpenAI-compatible providers. Leave empty to use the built-in default
+  # (`cli-proxy-openai-compat`). Trimmed whitespace is ignored.
+  user-agent: ""
 
   # When > 0, emit blank lines every N seconds for non-streaming responses to prevent idle timeouts.
   nonstream-keepalive-interval: 0
