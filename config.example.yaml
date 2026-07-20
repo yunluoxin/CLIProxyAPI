@@ -5,6 +5,11 @@ host: ""
 # Server port
 port: 8317
 
+# Override the User-Agent header sent on outbound requests to upstream
+# OpenAI-compatible providers. Leave empty to use the built-in default
+# (`cli-proxy-openai-compat`). Trimmed whitespace is ignored.
+user-agent: ""
+
 # TLS settings for HTTPS. When enabled, the server listens with the provided certificate and key.
 tls:
   enable: false

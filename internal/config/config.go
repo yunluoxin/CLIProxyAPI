@@ -24,6 +24,9 @@ const (
 	DefaultPanelGitHubRepository = "https://github.com/router-for-me/Cli-Proxy-API-Management-Center"
 	DefaultPprofAddr             = "127.0.0.1:8316"
 	DefaultAuthDir               = "~/.cli-proxy-api"
+	// DefaultUserAgent is the User-Agent header value used when the user has not
+	// configured their own in config.yaml (`user-agent`).
+	DefaultUserAgent = "cli-proxy-openai-compat"
 )
 
 // Config represents the application's configuration, loaded from a YAML file.
@@ -34,6 +37,10 @@ type Config struct {
 	Host string `yaml:"host" json:"-"`
 	// Port is the network port on which the API server will listen.
 	Port int `yaml:"port" json:"-"`
+
+	// UserAgent overrides the User-Agent header sent on outbound requests to
+	// upstream OpenAI-compatible providers. When empty, DefaultUserAgent is used.
+	UserAgent string `yaml:"user-agent" json:"user-agent"`
 
 	// TLS config controls HTTPS server settings.
 	TLS TLSConfig `yaml:"tls" json:"tls"`
@@ -858,6 +865,19 @@ func LoadConfigOptional(configFile string, optional bool) (*Config, error) {
 
 	// Return the populated configuration struct.
 	return &cfg, nil
+}
+
+// EffectiveUserAgent returns the configured User-Agent override, falling back
+// to DefaultUserAgent when unset or whitespace-only. Safe to call on a nil
+// receiver — it always returns DefaultUserAgent.
+func (cfg *Config) EffectiveUserAgent() string {
+	if cfg == nil {
+		return DefaultUserAgent
+	}
+	if ua := strings.TrimSpace(cfg.UserAgent); ua != "" {
+		return ua
+	}
+	return DefaultUserAgent
 }
 
 // NormalizePluginsConfig applies default plugin configuration values.
